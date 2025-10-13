@@ -310,7 +310,7 @@ class MinesweeperAI():
         if len(self.moves_made) + len(self.mines) == self.height * self.width:
             return None
         while True:
-            i = random.randrange(self.height - 1)
-            j = random.randrange(self.width - 1)
+            i = random.randrange(self.height)
+            j = random.randrange(self.width)
             if (i, j) not in self.moves_made and (i, j) not in self.mines:
                 return (i, j)
