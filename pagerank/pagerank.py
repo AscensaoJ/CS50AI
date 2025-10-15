@@ -66,6 +66,10 @@ def transition_model(corpus, page, damping_factor):
     # Gets the number of links on page for later averaging
     links_on_page = len(corpus[page])
 
+    #Equal random odds if no links on page
+    if links_on_page == 0:
+        rand_odds = 1 / page_count
+
 
     # Iterate over each page i in corpus
     for i in corpus:
@@ -156,14 +160,14 @@ def iterate_pagerank(corpus, damping_factor):
         for page in corpus:
             sum_odds = 0
             for other_page in corpus:
-                # Prevent collision
-                if page is other_page:
-                    continue
+                # If other page links nowhere, assume even odds to all pages
+                if len(corpus[other_page]) == 0:
+                    sum_odds += page_odds[other_page] * (1 / page_count)
                 # Factor in pages that link to current page
                 if page in corpus[other_page]:
                     sum_odds += page_odds[other_page] / len(corpus[other_page])
             # Calculate page rank
-            new_odds[page] = rand_odds + (damping_factor * sum_odds)
+            new_odds[page] = (rand_odds + (damping_factor * sum_odds))
 
         # Check and update changes and odds
         for page in corpus:
@@ -178,6 +182,7 @@ def iterate_pagerank(corpus, damping_factor):
         max_change = change
 
     return page_odds
+
 
 if __name__ == "__main__":
     main()
